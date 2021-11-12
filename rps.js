@@ -1,13 +1,12 @@
 const choices = ['Rock', 'Paper', 'Scissors'];
+
 const randomChoice = () => Math.floor(Math.random() * 3);
 
-function capitalize(selection) {
+const computerPlay = () => choices[randomChoice()];
+
+const capitalize = selection => {
     const lower = selection.toLowerCase();
     return lower.charAt(0).toUpperCase() + lower.slice(1);
-}
-
-function computerPlay() {
-    return choices[randomChoice()];
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -35,21 +34,45 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function game() {
-    let currentRound = 1;
-    let playerScore = 0;
-    let computerScore = 0;
+    let runningScore = {
+        'player': 0,
+        'computer': 0,
+    };
 
-    while(currentRound <= 5) {
-        const userInput = prompt("Rock, Paper, or Scissors?");
-        const result = playRound(userInput, computerPlay());
-        if(result === "p") playerScore++;
-        if(result === "c") computerScore++;
-        currentRound++;
-    }
+    const playerScore = document.querySelector("#player");
+    const computerScore = document.querySelector("#computer");
+    const gameResult = document.querySelector('#result');
 
-    if(playerScore === computerScore) return "Game result: Tie";
-    if(playerScore > computerScore) return "Game result: Player Wins!"
-    return "Game result: Computer Wins!"
+    const buttons = document.querySelectorAll('button');
+
+    buttons.forEach(button => button.addEventListener('click', () => {
+        const result = playRound(button.id, computerPlay());
+        if(result === "p") {
+            runningScore.player += 1;
+            playerScore.textContent = `Player: ${runningScore.player}`;
+        }
+        if(result === "c") {
+            runningScore.computer += 1;
+            computerScore.textContent = `Computer: ${runningScore.computer}`;
+        }
+
+        const scores = Object.values(runningScore);
+        if(scores.some(score => score === 5)) {
+            if(runningScore.player === runningScore.computer) {
+                gameResult.textContent = "Game result: Tie"; 
+                return
+            }
+            if(runningScore.player > runningScore.computer) {
+                gameResult.textContent = "Game result: Player Wins!"; 
+                return
+            }
+            gameResult.textContent = "Game result: Computer Wins!";
+        }
+    }));
 }
 
-console.log(game());
+game();
+
+
+
+
