@@ -1,19 +1,9 @@
-const choices = ['Rock', 'Paper', 'Scissors'];
-
-const randomChoice = () => Math.floor(Math.random() * 3);
-
-const computerPlay = () => choices[randomChoice()];
-
-const capitalize = selection => {
-    const lower = selection.toLowerCase();
-    return lower.charAt(0).toUpperCase() + lower.slice(1);
-}
-
-function playRound(playerSelection, computerSelection) {
-    playerSelection = capitalize(playerSelection);
-
+function playRound(playerSelection) {
+    const choices = ['Rock', 'Paper', 'Scissors'];
+    const computerSelection = choices[Math.floor(Math.random() * 3)];
     const playerIndex = choices.indexOf(playerSelection);
     const computerIndex = choices.indexOf(computerSelection);
+    const roundResult = document.querySelector('#round-result');
 
     const possibleOutcomes = [
         ['t', 'p', 'c'],
@@ -27,10 +17,10 @@ function playRound(playerSelection, computerSelection) {
         "c": `You lose! ${computerSelection} beats ${playerSelection}`,
     }
 
-    const roundResult = possibleOutcomes[computerIndex][playerIndex];
-    console.log(resultMessages[roundResult]);
+    const result = possibleOutcomes[computerIndex][playerIndex];
+    roundResult.textContent = resultMessages[result];
 
-    return roundResult
+    return result;
 }
 
 function game() {
@@ -41,12 +31,15 @@ function game() {
 
     const playerScore = document.querySelector("#player");
     const computerScore = document.querySelector("#computer");
-    const gameResult = document.querySelector('#result');
+    const gameResult = document.querySelector('#game-result');
 
     const buttons = document.querySelectorAll('button');
 
     buttons.forEach(button => button.addEventListener('click', () => {
-        const result = playRound(button.id, computerPlay());
+        if(gameResult.textContent !== "") return;
+        const result = playRound(button.id);
+
+        // Check for player or computer win, update points
         if(result === "p") {
             runningScore.player += 1;
             playerScore.textContent = `Player: ${runningScore.player}`;
@@ -56,23 +49,14 @@ function game() {
             computerScore.textContent = `Computer: ${runningScore.computer}`;
         }
 
-        const scores = Object.values(runningScore);
-        if(scores.some(score => score === 5)) {
-            if(runningScore.player === runningScore.computer) {
-                gameResult.textContent = "Game result: Tie"; 
-                return
-            }
-            if(runningScore.player > runningScore.computer) {
-                gameResult.textContent = "Game result: Player Wins!"; 
-                return
-            }
-            gameResult.textContent = "Game result: Computer Wins!";
+        // Check for a win after every click
+        if(runningScore.player === 5) {
+            gameResult.textContent = "Game result: Player Wins!"; 
+        }
+        if(runningScore.computer === 5) {
+            gameResult.textContent = "Game result: Computer Wins!"; 
         }
     }));
 }
 
 game();
-
-
-
-
