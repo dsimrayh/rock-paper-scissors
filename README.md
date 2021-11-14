@@ -1,4 +1,4 @@
-This is a simple "Rock, Paper, Scissors" game for The Odin Project's Foundations course. This branch contains a user interface, unlike the main branch which is played via the console.
+This is a simple "Rock, Paper, Scissors" game for The Odin Project's Foundations course. 
 
  - The user is presented with 3 buttons -- Rock, Paper, and Scissors.
  - The user's and the computer's running scores are displayed at the top and will update after each round played.
